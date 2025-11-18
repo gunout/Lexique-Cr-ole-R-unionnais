@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lexique Créole Réunionnais - Dictionnaire Interactif</title>
+    <title>Lexique Créole Réunionnais - Interface Cyberpunk</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,17 +11,23 @@
     <style>
         /* --- Variables & Global Styles --- */
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #141929;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --text-primary: #e0e6ed;
-            --text-secondary: #a0a9b8;
-            --accent-cyan: #00d4ff;
-            --accent-magenta: #ff00d4;
-            --accent-purple: #8b5cf6;
-            --accent-orange: #ff7f00;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --shadow-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+            /* Couleurs du drapeau de La Réunion */
+            --reunion-blue: #0055A4;
+            --reunion-yellow: #FFCE00;
+            --reunion-red: #EF4135;
+            --reunion-white: #FFFFFF;
+            --reunion-black: #000000;
+
+            /* Thème Cyberpunk */
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: rgba(26, 26, 26, 0.7);
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --border-color: #333;
+            --neon-glow-blue: 0 0 10px #0055A4, 0 0 20px #0055A4, 0 0 30px #0055A4;
+            --neon-glow-red: 0 0 10px #EF4135, 0 0 20px #EF4135, 0 0 30px #EF4135;
+            --neon-glow-yellow: 0 0 10px #FFCE00, 0 0 20px #FFCE00;
         }
 
         * {
@@ -37,31 +43,34 @@
             line-height: 1.6;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 0, 212, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
         }
 
         /* --- Header --- */
         .top-header {
             background-color: var(--bg-secondary);
-            padding: 1.5rem 2rem;
+            padding: 2rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--reunion-blue);
+            box-shadow: var(--neon-glow-blue);
         }
 
         .logo {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--reunion-white);
+            text-shadow: var(--neon-glow-blue);
             margin-bottom: 0.5rem;
         }
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 1px;
         }
 
         .search-container {
@@ -75,16 +84,17 @@
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 1rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            border-radius: 0; /* Angles droits pour le look cyberpunk */
+            font-size: 1rem;
+            font-family: 'Roboto Mono', monospace;
             width: 100%;
             transition: all 0.3s ease;
         }
 
         .search-bar:focus {
             outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: var(--shadow-glow);
+            border-color: var(--reunion-blue);
+            box-shadow: inset 0 0 5px var(--reunion-blue), var(--neon-glow-blue);
         }
 
         .search-count {
@@ -92,34 +102,37 @@
             color: var(--text-secondary);
             margin-top: 0.5rem;
             font-size: 0.9rem;
+            font-family: 'Roboto Mono', monospace;
         }
 
         /* --- Main Layout --- */
         .app-container {
             display: flex;
-            min-height: calc(100vh - 200px);
+            min-height: calc(100vh - 220px);
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+            gap: 2rem;
         }
 
         /* --- Sidebar --- */
         .sidebar {
             flex: 0 0 300px;
-            background-color: var(--bg-secondary);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            margin-right: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border: 1px solid var(--reunion-blue);
+            box-shadow: var(--neon-glow-blue);
             height: fit-content;
         }
 
         .sidebar h2 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 1.5rem;
-            color: var(--accent-cyan);
+            color: var(--reunion-yellow);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-family: 'Roboto Mono', monospace;
+            text-shadow: var(--neon-glow-yellow);
         }
 
         .alphabet-nav {
@@ -130,49 +143,58 @@
         }
 
         .alphabet-btn {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            color: var(--text-primary);
+            color: var(--text-secondary);
             padding: 0.75rem;
-            border-radius: 8px;
+            border-radius: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
         }
 
-        .alphabet-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: var(--accent-cyan);
-            transform: translateY(-2px);
+        .alphabet-btn:hover:not(:disabled) {
+            background: var(--reunion-blue);
+            color: var(--reunion-white);
+            box-shadow: var(--neon-glow-blue);
+            transform: scale(1.05);
         }
 
         .alphabet-btn.active {
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
+            background: var(--reunion-yellow);
             color: var(--bg-primary);
-            border-color: transparent;
+            font-weight: 700;
+            box-shadow: var(--neon-glow-yellow);
+        }
+        
+        .alphabet-btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
         }
 
         .stats {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             padding: 1rem;
-            border-radius: 8px;
             border: 1px solid var(--border-color);
         }
 
         .stat-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             font-size: 0.9rem;
+            font-family: 'Roboto Mono', monospace;
         }
 
         .stat-value {
-            color: var(--accent-cyan);
+            color: var(--reunion-yellow);
             font-weight: 600;
+            text-shadow: var(--neon-glow-yellow);
         }
 
         /* --- Main Content --- */
@@ -185,15 +207,23 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .content-header h2 {
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-primary);
         }
 
         .view-toggle {
             display: flex;
-            gap: 0.5rem;
+            gap: 0;
             background: var(--bg-secondary);
-            padding: 0.5rem;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--reunion-blue);
+            box-shadow: var(--neon-glow-blue);
         }
 
         .view-btn {
@@ -201,15 +231,17 @@
             border: none;
             color: var(--text-secondary);
             padding: 0.75rem 1.5rem;
-            border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
         }
 
         .view-btn.active {
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
-            color: var(--bg-primary);
+            background: var(--reunion-blue);
+            color: var(--reunion-white);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
 
         /* --- Word Grid --- */
@@ -222,12 +254,10 @@
 
         .word-card {
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
             padding: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -239,10 +269,11 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
+            width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-orange));
+            background: linear-gradient(90deg, var(--reunion-blue), var(--reunion-yellow));
             transform: scaleX(0);
+            transform-origin: left;
             transition: transform 0.3s ease;
         }
 
@@ -252,8 +283,8 @@
 
         .word-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
-            border-color: var(--accent-cyan);
+            border-color: var(--reunion-blue);
+            box-shadow: var(--neon-glow-blue);
         }
 
         .card-header {
@@ -267,11 +298,16 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--reunion-yellow);
+            text-shadow: var(--neon-glow-yellow);
         }
 
         .word-meta {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
         }
 
         .card-actions {
@@ -285,15 +321,18 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 1.2rem;
-            transition: color 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .icon-btn:hover {
-            color: var(--accent-cyan);
+            color: var(--reunion-red);
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 5px var(--reunion-red));
         }
 
         .icon-btn.active {
-            color: var(--accent-magenta);
+            color: var(--reunion-red);
+            animation: pulse-red 1.5s infinite;
         }
 
         .definition {
@@ -316,7 +355,6 @@
         .list-item {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
             cursor: pointer;
@@ -327,13 +365,17 @@
         }
 
         .list-item:hover {
-            border-color: var(--accent-cyan);
-            transform: translateX(5px);
+            border-color: var(--reunion-blue);
+            transform: translateX(10px);
+            box-shadow: var(--neon-glow-blue);
         }
 
         .list-word {
             font-size: 1.2rem;
             font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--reunion-yellow);
+            text-shadow: var(--neon-glow-yellow);
         }
 
         .list-definition {
@@ -351,17 +393,17 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(10, 14, 26, 0.9);
+            background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
             animation: fadeIn 0.4s;
         }
 
         .modal-content {
             background-color: var(--bg-secondary);
-            margin: 2% auto;
+            margin: 5% auto;
             padding: 2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border: 2px solid var(--reunion-yellow);
+            box-shadow: var(--neon-glow-yellow);
             width: 90%;
             max-width: 600px;
             max-height: 90vh;
@@ -378,19 +420,21 @@
             font-size: 2rem;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s;
         }
 
         .close-btn:hover {
-            color: var(--text-primary);
+            color: var(--reunion-red);
+            filter: drop-shadow(0 0 5px var(--reunion-red));
         }
 
         .modal-word {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--reunion-yellow);
+            text-shadow: var(--neon-glow-yellow);
         }
 
         .modal-definition {
@@ -407,32 +451,42 @@
         }
 
         .btn {
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
-            color: var(--bg-primary);
+            background: var(--reunion-blue);
+            color: var(--reunion-white);
             border: none;
             padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            border-radius: 0;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.2s ease;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: var(--neon-glow-blue);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 0 15px var(--reunion-blue), 0 0 25px var(--reunion-blue);
         }
 
         .btn-secondary {
             background: var(--bg-card);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--reunion-red);
+            box-shadow: var(--neon-glow-red);
         }
 
         .voice-controls {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
         .voice-select {
@@ -440,8 +494,8 @@
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 0.5rem;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            border-radius: 0;
+            font-family: 'Roboto Mono', monospace;
         }
 
         /* --- Animations --- */
@@ -455,6 +509,12 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+        @keyframes pulse-red {
+            0% { filter: drop-shadow(0 0 5px var(--reunion-red)); }
+            50% { filter: drop-shadow(0 0 15px var(--reunion-red)); }
+            100% { filter: drop-shadow(0 0 5px var(--reunion-red)); }
+        }
+
         /* --- Responsive --- */
         @media (max-width: 768px) {
             .app-container {
@@ -463,8 +523,6 @@
             }
 
             .sidebar {
-                margin-right: 0;
-                margin-bottom: 2rem;
                 width: 100%;
             }
 
@@ -478,6 +536,7 @@
 
             .content-header {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 1rem;
             }
 
@@ -499,11 +558,11 @@
 </head>
 <body>
     <header class="top-header">
-        <div class="logo">🗣️ Lexique Créole Réunionnais</div>
-        <div class="subtitle">Dictionnaire interactif - Plus de <span id="total-words">0</span> mots</div>
+        <div class="logo">🗣️ Lexique Créole</div>
+        <div class="subtitle">Dictionnaire interactif  // <span id="total-words">0</span> mots dans la base</div>
         
         <div class="search-container">
-            <input type="search" id="search-input" class="search-bar" placeholder="Rechercher un mot créole ou sa définition...">
+            <input type="search" id="search-input" class="search-bar" placeholder="Scanner la base de données...">
             <div class="search-count" id="search-count">Tapez pour rechercher</div>
         </div>
     </header>
@@ -536,13 +595,13 @@
             <div class="content-header">
                 <h2 id="current-view-title">Tous les mots</h2>
                 <div class="view-toggle">
-                    <button class="view-btn active" data-view="grid">🟰 Grille</button>
-                    <button class="view-btn" data-view="list">📃 Liste</button>
+                    <button class="view-btn active" data-view="grid">Grille</button>
+                    <button class="view-btn" data-view="list">Liste</button>
                 </div>
             </div>
 
             <div class="word-grid" id="word-grid">
-                <!-- Les cartes des mots seront générées ici -->
+                <!-- Les cartes des mots seront générés ici -->
             </div>
 
             <div class="word-list" id="word-list">
@@ -612,13 +671,9 @@
 
         // Initialisation des voix
         function loadVoices() {
-            // Récupérer les voix disponibles
             voices = speechSynthesis.getVoices();
-            
-            // Vider la liste déroulante
             voiceSelect.innerHTML = '<option value="">Choisir une voix</option>';
             
-            // Filtrer les voix françaises et féminines
             const frenchFemaleVoices = voices.filter(voice => {
                 return (voice.lang.includes('fr') || voice.lang.includes('FR')) && 
                        (voice.name.toLowerCase().includes('female') || 
@@ -628,7 +683,6 @@
                         voice.name.toLowerCase().includes('chantal'));
             });
             
-            // Ajouter les voix françaises féminines
             frenchFemaleVoices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
@@ -636,7 +690,6 @@
                 voiceSelect.appendChild(option);
             });
             
-            // Si aucune voix féminine française n'est trouvée, afficher toutes les voix françaises
             if (frenchFemaleVoices.length === 0) {
                 const frenchVoices = voices.filter(voice => voice.lang.includes('fr') || voice.lang.includes('FR'));
                 frenchVoices.forEach(voice => {
@@ -647,12 +700,10 @@
                 });
             }
             
-            // Sélectionner la première voix féminine par défaut
             if (frenchFemaleVoices.length > 0) {
                 selectedVoice = frenchFemaleVoices[0];
                 voiceSelect.value = selectedVoice.name;
             } else if (voices.length > 0) {
-                // Fallback sur la première voix française
                 const frenchVoices = voices.filter(voice => voice.lang.includes('fr') || voice.lang.includes('FR'));
                 if (frenchVoices.length > 0) {
                     selectedVoice = frenchVoices[0];
@@ -669,7 +720,6 @@
             renderWords();
             setupEventListeners();
             
-            // Charger les voix
             if (speechSynthesis.onvoiceschanged !== undefined) {
                 speechSynthesis.onvoiceschanged = loadVoices;
             }
@@ -678,14 +728,12 @@
 
         // Création de la navigation alphabétique
         function createAlphabetNav() {
-            // Bouton "Tous"
             const allBtn = document.createElement('button');
             allBtn.className = 'alphabet-btn active';
             allBtn.textContent = 'Tous';
             allBtn.dataset.letter = 'all';
             alphabetNav.appendChild(allBtn);
 
-            // Boutons pour chaque lettre
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
             letters.forEach(letter => {
                 const btn = document.createElement('button');
@@ -693,31 +741,23 @@
                 btn.textContent = letter;
                 btn.dataset.letter = letter;
                 
-                // Vérifier si des mots commencent par cette lettre
                 const hasWords = wordsArray.some(word => word.firstLetter === letter);
                 if (!hasWords) {
-                    btn.style.opacity = '0.3';
-                    btn.style.cursor = 'not-allowed';
+                    btn.disabled = true;
                 }
                 
                 alphabetNav.appendChild(btn);
             });
 
-            // Événement de clic sur les boutons de l'alphabet
             alphabetNav.addEventListener('click', (e) => {
-                if (e.target.classList.contains('alphabet-btn')) {
+                if (e.target.classList.contains('alphabet-btn') && !e.target.disabled) {
                     const letter = e.target.dataset.letter;
                     
-                    // Ignorer les lettres sans mots
-                    if (e.target.style.opacity === '0.3') return;
-                    
-                    // Mettre à jour l'état actif
                     document.querySelectorAll('.alphabet-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     e.target.classList.add('active');
                     
-                    // Filtrer les mots
                     currentLetter = letter;
                     activeLetter.textContent = letter === 'all' ? 'Toutes' : letter;
                     filterWords();
@@ -729,12 +769,10 @@
         function filterWords() {
             const searchTerm = searchInput.value.toLowerCase();
             
-            // Filtre par lettre
             let filtered = currentLetter === 'all' 
                 ? wordsArray 
                 : wordsArray.filter(word => word.firstLetter === currentLetter);
             
-            // Filtre par recherche
             if (searchTerm) {
                 filtered = filtered.filter(word => 
                     word.word.toLowerCase().includes(searchTerm) || 
@@ -748,17 +786,14 @@
 
         // Affichage des mots
         function renderWords() {
-            // Mettre à jour les compteurs
             displayedCount.textContent = currentWords.length;
             searchCount.textContent = currentWords.length === wordsArray.length 
                 ? 'Tous les mots affichés' 
                 : `${currentWords.length} mot(s) trouvé(s)`;
             
-            // Vider les conteneurs
             wordGrid.innerHTML = '';
             wordList.innerHTML = '';
             
-            // Afficher le message si aucun mot n'est trouvé
             if (currentWords.length === 0) {
                 const message = document.createElement('div');
                 message.style.gridColumn = '1 / -1';
@@ -771,7 +806,6 @@
                 return;
             }
             
-            // Rendre les mots selon la vue actuelle
             if (currentView === 'grid') {
                 renderGridView();
             } else {
@@ -848,7 +882,6 @@
             modalWord.textContent = word.word;
             modalDefinition.textContent = word.definition;
             
-            // Mettre à jour le bouton favori
             favoriteModalBtn.textContent = favorites.includes(word.id) 
                 ? '❤️ Retirer des favoris' 
                 : '❤️ Ajouter aux favoris';
@@ -873,10 +906,8 @@
             localStorage.setItem('creoleFavorites', JSON.stringify(favorites));
             updateFavoritesCount();
             
-            // Re-rendre les mots pour mettre à jour les boutons favoris
             renderWords();
             
-            // Mettre à jour le bouton dans la modal si ouvert
             if (currentModalWord && currentModalWord.id === wordId) {
                 favoriteModalBtn.textContent = favorites.includes(wordId) 
                     ? '❤️ Retirer des favoris' 
@@ -892,22 +923,17 @@
         // Synthèse vocale avec voix féminine
         function speakWord(word) {
             if ('speechSynthesis' in window) {
-                // Arrêter toute parole en cours
                 speechSynthesis.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(word);
                 utterance.lang = 'fr-FR';
-                
-                // Paramètres pour une voix plus naturelle
-                utterance.rate = 0.9; // Légèrement plus lent
-                utterance.pitch = 1.1; // Légèrement plus aigu
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
                 utterance.volume = 1.0;
                 
-                // Utiliser la voix sélectionnée
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
                 } else {
-                    // Fallback: chercher une voix féminine française
                     const frenchFemaleVoices = speechSynthesis.getVoices().filter(voice => {
                         return (voice.lang.includes('fr') || voice.lang.includes('FR')) && 
                                (voice.name.toLowerCase().includes('female') || 
@@ -919,7 +945,6 @@
                     }
                 }
                 
-                // Démarrer la synthèse
                 speechSynthesis.speak(utterance);
             } else {
                 alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
@@ -928,23 +953,18 @@
 
         // Configuration des écouteurs d'événements
         function setupEventListeners() {
-            // Recherche
             searchInput.addEventListener('input', filterWords);
             
-            // Changement de vue
             viewBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const view = btn.dataset.view;
                     
-                    // Mettre à jour les boutons
                     viewBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
-                    // Changer la vue
                     currentView = view;
                     currentViewTitle.textContent = view === 'grid' ? 'Tous les mots' : 'Liste des mots';
                     
-                    // Afficher/masquer les conteneurs
                     if (view === 'grid') {
                         wordGrid.style.display = 'grid';
                         wordList.style.display = 'none';
@@ -953,12 +973,10 @@
                         wordList.style.display = 'block';
                     }
                     
-                    // Re-rendre les mots
                     renderWords();
                 });
             });
             
-            // Gestion des favoris
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('favorite-btn')) {
                     e.stopPropagation();
@@ -967,13 +985,11 @@
                 }
             });
             
-            // Modal
             document.querySelector('.close-btn').addEventListener('click', closeModal);
             window.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
             });
             
-            // Boutons de la modal
             favoriteModalBtn.addEventListener('click', () => {
                 if (currentModalWord) {
                     toggleFavorite(currentModalWord.id);
@@ -986,7 +1002,6 @@
                 }
             });
             
-            // Sélection de voix
             voiceSelect.addEventListener('change', () => {
                 const selectedVoiceName = voiceSelect.value;
                 if (selectedVoiceName) {
