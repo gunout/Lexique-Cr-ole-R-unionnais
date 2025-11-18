@@ -1,6 +1,5 @@
 // Dictionnaire Créole Réunionnais - Français
 // Source: mi-aime-a-ou.com
-// Généré automatiquement
 
 var dictionnaire = {
   "A cause": ": Pourquoi ou parce que. \" Lu\' l\'a touffe à cause lu\' l\'a trop mangé \" \" Il s\'est étouffé parce qu\'il a trop mangé \"",
