@@ -1,5 +1,5 @@
 # Lexique-Créole-Réunionnais
-Lexique Créole Réunionnais _ Dictionnaire interactif - Plus de ( 4570 mots ) * 
+Lexique Créole Réunionnais _ Dictionnaire interactif - ( 4600 mots ) * 
 
 // Source: mi-aime-a-ou.com
 
