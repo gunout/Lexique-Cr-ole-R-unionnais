@@ -84,7 +84,7 @@
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 1rem 1.5rem;
-            border-radius: 0; /* Angles droits pour le look cyberpunk */
+            border-radius: 0;
             font-size: 1rem;
             font-family: 'Roboto Mono', monospace;
             width: 100%;
@@ -671,9 +671,13 @@
 
         // Initialisation des voix
         function loadVoices() {
+            // Récupérer les voix disponibles
             voices = speechSynthesis.getVoices();
+            
+            // Vider la liste déroulante
             voiceSelect.innerHTML = '<option value="">Choisir une voix</option>';
             
+            // Filtrer les voix françaises et féminines
             const frenchFemaleVoices = voices.filter(voice => {
                 return (voice.lang.includes('fr') || voice.lang.includes('FR')) && 
                        (voice.name.toLowerCase().includes('female') || 
@@ -683,6 +687,7 @@
                         voice.name.toLowerCase().includes('chantal'));
             });
             
+            // Ajouter les voix françaises féminines
             frenchFemaleVoices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
@@ -690,6 +695,7 @@
                 voiceSelect.appendChild(option);
             });
             
+            // Si aucune voix féminine française n'est trouvée, afficher toutes les voix françaises
             if (frenchFemaleVoices.length === 0) {
                 const frenchVoices = voices.filter(voice => voice.lang.includes('fr') || voice.lang.includes('FR'));
                 frenchVoices.forEach(voice => {
@@ -700,10 +706,12 @@
                 });
             }
             
+            // Sélectionner la première voix féminine par défaut
             if (frenchFemaleVoices.length > 0) {
                 selectedVoice = frenchFemaleVoices[0];
                 voiceSelect.value = selectedVoice.name;
             } else if (voices.length > 0) {
+                // Fallback sur la première voix française
                 const frenchVoices = voices.filter(voice => voice.lang.includes('fr') || voice.lang.includes('FR'));
                 if (frenchVoices.length > 0) {
                     selectedVoice = frenchVoices[0];
@@ -720,6 +728,7 @@
             renderWords();
             setupEventListeners();
             
+            // Charger les voix
             if (speechSynthesis.onvoiceschanged !== undefined) {
                 speechSynthesis.onvoiceschanged = loadVoices;
             }
@@ -728,12 +737,14 @@
 
         // Création de la navigation alphabétique
         function createAlphabetNav() {
+            // Bouton "Tous"
             const allBtn = document.createElement('button');
             allBtn.className = 'alphabet-btn active';
             allBtn.textContent = 'Tous';
             allBtn.dataset.letter = 'all';
             alphabetNav.appendChild(allBtn);
 
+            // Boutons pour chaque lettre
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
             letters.forEach(letter => {
                 const btn = document.createElement('button');
@@ -741,23 +752,31 @@
                 btn.textContent = letter;
                 btn.dataset.letter = letter;
                 
+                // Vérifier si des mots commencent par cette lettre
                 const hasWords = wordsArray.some(word => word.firstLetter === letter);
                 if (!hasWords) {
-                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    btn.style.cursor = 'not-allowed';
                 }
                 
                 alphabetNav.appendChild(btn);
             });
 
+            // Événement de clic sur les boutons de l'alphabet
             alphabetNav.addEventListener('click', (e) => {
-                if (e.target.classList.contains('alphabet-btn') && !e.target.disabled) {
+                if (e.target.classList.contains('alphabet-btn')) {
                     const letter = e.target.dataset.letter;
                     
+                    // Ignorer les lettres sans mots
+                    if (e.target.style.opacity === '0.3') return;
+                    
+                    // Mettre à jour l'état actif
                     document.querySelectorAll('.alphabet-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     e.target.classList.add('active');
                     
+                    // Filtrer les mots
                     currentLetter = letter;
                     activeLetter.textContent = letter === 'all' ? 'Toutes' : letter;
                     filterWords();
@@ -769,10 +788,12 @@
         function filterWords() {
             const searchTerm = searchInput.value.toLowerCase();
             
+            // Filtre par lettre
             let filtered = currentLetter === 'all' 
                 ? wordsArray 
                 : wordsArray.filter(word => word.firstLetter === currentLetter);
             
+            // Filtre par recherche
             if (searchTerm) {
                 filtered = filtered.filter(word => 
                     word.word.toLowerCase().includes(searchTerm) || 
@@ -786,14 +807,17 @@
 
         // Affichage des mots
         function renderWords() {
+            // Mettre à jour les compteurs
             displayedCount.textContent = currentWords.length;
             searchCount.textContent = currentWords.length === wordsArray.length 
                 ? 'Tous les mots affichés' 
                 : `${currentWords.length} mot(s) trouvé(s)`;
             
+            // Vider les conteneurs
             wordGrid.innerHTML = '';
             wordList.innerHTML = '';
             
+            // Afficher le message si aucun mot n'est trouvé
             if (currentWords.length === 0) {
                 const message = document.createElement('div');
                 message.style.gridColumn = '1 / -1';
@@ -806,6 +830,7 @@
                 return;
             }
             
+            // Rendre les mots selon la vue actuelle
             if (currentView === 'grid') {
                 renderGridView();
             } else {
@@ -882,6 +907,7 @@
             modalWord.textContent = word.word;
             modalDefinition.textContent = word.definition;
             
+            // Mettre à jour le bouton favori
             favoriteModalBtn.textContent = favorites.includes(word.id) 
                 ? '❤️ Retirer des favoris' 
                 : '❤️ Ajouter aux favoris';
@@ -906,8 +932,10 @@
             localStorage.setItem('creoleFavorites', JSON.stringify(favorites));
             updateFavoritesCount();
             
+            // Re-rendre les mots pour mettre à jour les boutons favoris
             renderWords();
             
+            // Mettre à jour le bouton dans la modal si ouvert
             if (currentModalWord && currentModalWord.id === wordId) {
                 favoriteModalBtn.textContent = favorites.includes(wordId) 
                     ? '❤️ Retirer des favoris' 
@@ -923,17 +951,22 @@
         // Synthèse vocale avec voix féminine
         function speakWord(word) {
             if ('speechSynthesis' in window) {
+                // Arrêter toute parole en cours
                 speechSynthesis.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(word);
                 utterance.lang = 'fr-FR';
-                utterance.rate = 0.9;
-                utterance.pitch = 1.1;
+                
+                // Paramètres pour une voix plus naturelle
+                utterance.rate = 0.9; // Légèrement plus lent
+                utterance.pitch = 1.1; // Légèrement plus aigu
                 utterance.volume = 1.0;
                 
+                // Utiliser la voix sélectionnée
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
                 } else {
+                    // Fallback: chercher une voix féminine française
                     const frenchFemaleVoices = speechSynthesis.getVoices().filter(voice => {
                         return (voice.lang.includes('fr') || voice.lang.includes('FR')) && 
                                (voice.name.toLowerCase().includes('female') || 
@@ -945,6 +978,7 @@
                     }
                 }
                 
+                // Démarrer la synthèse
                 speechSynthesis.speak(utterance);
             } else {
                 alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
@@ -953,18 +987,23 @@
 
         // Configuration des écouteurs d'événements
         function setupEventListeners() {
+            // Recherche
             searchInput.addEventListener('input', filterWords);
             
+            // Changement de vue
             viewBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const view = btn.dataset.view;
                     
+                    // Mettre à jour les boutons
                     viewBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
+                    // Changer la vue
                     currentView = view;
                     currentViewTitle.textContent = view === 'grid' ? 'Tous les mots' : 'Liste des mots';
                     
+                    // Afficher/masquer les conteneurs
                     if (view === 'grid') {
                         wordGrid.style.display = 'grid';
                         wordList.style.display = 'none';
@@ -973,10 +1012,12 @@
                         wordList.style.display = 'block';
                     }
                     
+                    // Re-rendre les mots
                     renderWords();
                 });
             });
             
+            // Gestion des favoris
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('favorite-btn')) {
                     e.stopPropagation();
@@ -985,11 +1026,13 @@
                 }
             });
             
+            // Modal
             document.querySelector('.close-btn').addEventListener('click', closeModal);
             window.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
             });
             
+            // Boutons de la modal
             favoriteModalBtn.addEventListener('click', () => {
                 if (currentModalWord) {
                     toggleFavorite(currentModalWord.id);
@@ -1002,6 +1045,7 @@
                 }
             });
             
+            // Sélection de voix
             voiceSelect.addEventListener('change', () => {
                 const selectedVoiceName = voiceSelect.value;
                 if (selectedVoiceName) {
