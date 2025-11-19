@@ -49,17 +49,17 @@
         /* --- Header --- */
         .top-header {
             background-color: var(--bg-secondary);
-            padding: 2rem;
+            padding: 1.5rem 1rem;
             text-align: center;
             border-bottom: 2px solid var(--reunion-blue);
             box-shadow: var(--neon-glow-blue);
         }
 
         .logo {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 700;
             font-family: 'Roboto Mono', monospace;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--reunion-white);
             text-shadow: var(--neon-glow-blue);
@@ -68,14 +68,14 @@
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-family: 'Roboto Mono', monospace;
             letter-spacing: 1px;
         }
 
         .search-container {
             max-width: 600px;
-            margin: 2rem auto 0;
+            margin: 1.5rem auto 0;
             position: relative;
         }
 
@@ -83,7 +83,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 0;
             font-size: 1rem;
             font-family: 'Roboto Mono', monospace;
@@ -101,36 +101,36 @@
             text-align: center;
             color: var(--text-secondary);
             margin-top: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-family: 'Roboto Mono', monospace;
         }
 
         /* --- Main Layout --- */
         .app-container {
             display: flex;
-            min-height: calc(100vh - 220px);
+            min-height: calc(100vh - 180px);
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
-            gap: 2rem;
+            padding: 1rem;
+            gap: 1.5rem;
         }
 
         /* --- Sidebar --- */
         .sidebar {
-            flex: 0 0 300px;
+            flex: 0 0 280px;
             background: var(--bg-card);
-            padding: 1.5rem;
+            padding: 1.2rem;
             border: 1px solid var(--reunion-blue);
             box-shadow: var(--neon-glow-blue);
             height: fit-content;
         }
 
         .sidebar h2 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
             color: var(--reunion-yellow);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             font-family: 'Roboto Mono', monospace;
             text-shadow: var(--neon-glow-yellow);
         }
@@ -138,15 +138,15 @@
         .alphabet-nav {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 2rem;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
         }
 
         .alphabet-btn {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 0.75rem;
+            padding: 0.6rem;
             border-radius: 0;
             display: flex;
             justify-content: center;
@@ -156,6 +156,7 @@
             transition: all 0.2s ease;
             font-family: 'Roboto Mono', monospace;
             text-transform: uppercase;
+            font-size: 0.8rem;
         }
 
         .alphabet-btn:hover:not(:disabled) {
@@ -179,15 +180,15 @@
 
         .stats {
             background: var(--bg-secondary);
-            padding: 1rem;
+            padding: 0.8rem;
             border: 1px solid var(--border-color);
         }
 
         .stat-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -206,9 +207,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
         }
 
         .content-header h2 {
@@ -216,6 +217,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-primary);
+            font-size: 1.1rem;
         }
 
         .view-toggle {
@@ -230,12 +232,13 @@
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Roboto Mono', monospace;
             text-transform: uppercase;
+            font-size: 0.8rem;
         }
 
         .view-btn.active {
@@ -247,15 +250,15 @@
         /* --- Word Grid --- */
         .word-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
             animation: fadeIn 0.5s ease-in-out;
         }
 
         .word-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 1.5rem;
+            padding: 1.2rem;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
@@ -291,13 +294,13 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .word-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
             font-family: 'Roboto Mono', monospace;
             color: var(--reunion-yellow);
             text-shadow: var(--neon-glow-yellow);
@@ -305,14 +308,14 @@
 
         .word-meta {
             color: var(--text-secondary);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-family: 'Roboto Mono', monospace;
             text-transform: uppercase;
         }
 
         .card-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .icon-btn {
@@ -320,7 +323,7 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: all 0.2s ease;
         }
 
@@ -336,7 +339,7 @@
         }
 
         .definition {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.5;
             flex-grow: 1;
@@ -355,8 +358,8 @@
         .list-item {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            padding: 1.2rem;
+            margin-bottom: 0.8rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -371,7 +374,7 @@
         }
 
         .list-word {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             font-family: 'Roboto Mono', monospace;
             color: var(--reunion-yellow);
@@ -380,7 +383,7 @@
 
         .list-definition {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             max-width: 60%;
         }
 
@@ -401,7 +404,7 @@
         .modal-content {
             background-color: var(--bg-secondary);
             margin: 5% auto;
-            padding: 2rem;
+            padding: 1.5rem;
             border: 2px solid var(--reunion-yellow);
             box-shadow: var(--neon-glow-yellow);
             width: 90%;
@@ -417,7 +420,7 @@
             position: absolute;
             top: 1rem;
             right: 1.5rem;
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             cursor: pointer;
             transition: color 0.2s;
@@ -429,7 +432,7 @@
         }
 
         .modal-word {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             font-family: 'Roboto Mono', monospace;
@@ -438,23 +441,23 @@
         }
 
         .modal-definition {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             line-height: 1.6;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .modal-actions {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
         }
 
         .btn {
             background: var(--reunion-blue);
             color: var(--reunion-white);
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 0;
             font-weight: 600;
             cursor: pointer;
@@ -463,6 +466,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             box-shadow: var(--neon-glow-blue);
+            font-size: 0.8rem;
         }
 
         .btn:hover {
@@ -485,17 +489,48 @@
         .voice-controls {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
         }
 
         .voice-select {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 0.5rem;
+            padding: 0.4rem;
             border-radius: 0;
             font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        /* --- Back to Top Button --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--reunion-blue);
+            color: var(--reunion-white);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--neon-glow-blue);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px var(--reunion-blue);
+        }
+
+        .back-to-top.show {
+            display: flex;
         }
 
         /* --- Animations --- */
@@ -516,28 +551,72 @@
         }
 
         /* --- Responsive --- */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .app-container {
                 flex-direction: column;
                 padding: 1rem;
+                gap: 1rem;
             }
 
             .sidebar {
                 width: 100%;
+                flex: none;
             }
 
             .alphabet-nav {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(8, 1fr);
+            }
+
+            .word-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 1rem 0.8rem;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+            }
+
+            .search-container {
+                margin: 1rem auto 0;
+            }
+
+            .search-bar {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .alphabet-nav {
+                grid-template-columns: repeat(6, 1fr);
             }
 
             .word-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .content-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1rem;
+                gap: 0.8rem;
+            }
+
+            .view-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .view-btn {
+                flex: 1;
+                text-align: center;
             }
 
             .list-item {
@@ -550,8 +629,106 @@
                 max-width: 100%;
             }
 
+            .modal-content {
+                padding: 1.2rem;
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .modal-word {
+                font-size: 1.8rem;
+            }
+
+            .modal-definition {
+                font-size: 0.95rem;
+            }
+
             .modal-actions {
                 flex-direction: column;
+            }
+
+            .voice-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .back-to-top {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-header {
+                padding: 0.8rem 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+
+            .search-bar {
+                padding: 0.6rem 0.8rem;
+            }
+
+            .alphabet-nav {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .alphabet-btn {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .sidebar {
+                padding: 1rem;
+            }
+
+            .sidebar h2 {
+                font-size: 1rem;
+            }
+
+            .word-card {
+                padding: 1rem;
+            }
+
+            .word-title {
+                font-size: 1.2rem;
+            }
+
+            .definition {
+                font-size: 0.85rem;
+            }
+
+            .back-to-top {
+                bottom: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .alphabet-nav {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .word-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 1rem;
+                margin: 5% auto;
+            }
+
+            .modal-word {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -610,6 +787,9 @@
         </main>
     </div>
 
+    <!-- Bouton pour remonter en haut -->
+    <button class="back-to-top" id="back-to-top" title="Remonter en haut">↑</button>
+
     <!-- Modal pour afficher les détails d'un mot -->
     <div id="word-modal" class="modal">
         <div class="modal-content">
@@ -659,6 +839,7 @@
         const speakBtn = document.getElementById('speak-btn');
         const voiceSelect = document.getElementById('voice-select');
         const currentViewTitle = document.getElementById('current-view-title');
+        const backToTopBtn = document.getElementById('back-to-top');
 
         // État de l'application
         let currentWords = [...wordsArray];
@@ -724,6 +905,7 @@
             }
             loadVoices();
             setupEventListeners();
+            setupBackToTop();
         }
 
         // Création de la navigation alphabétique
@@ -765,7 +947,7 @@
             });
         }
 
-        // Filtrage des mots - CORRECTION : recherche uniquement dans les mots créoles
+        // Filtrage des mots - Recherche uniquement dans les mots créoles
         function filterWords() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             
@@ -774,10 +956,9 @@
                 : wordsArray.filter(word => word.firstLetter === currentLetter);
             
             if (searchTerm) {
-                // CORRECTION : Recherche uniquement dans les mots créoles (word.word)
+                // Recherche uniquement dans les mots créoles
                 filtered = filtered.filter(word => 
                     word.word.toLowerCase().includes(searchTerm)
-                    // Supprimé la recherche dans les définitions : || word.definition.toLowerCase().includes(searchTerm)
                 );
             }
             
@@ -805,9 +986,9 @@
                 const message = document.createElement('div');
                 message.style.gridColumn = '1 / -1';
                 message.style.textAlign = 'center';
-                message.style.padding = '3rem';
+                message.style.padding = '2rem';
                 message.style.color = 'var(--text-secondary)';
-                message.style.fontSize = '1.2rem';
+                message.style.fontSize = '1rem';
                 message.textContent = 'Aucun mot créole ne correspond à votre recherche.';
                 wordGrid.appendChild(message);
                 
@@ -964,6 +1145,26 @@
             } else {
                 alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
             }
+        }
+
+        // Configuration du bouton "Remonter en haut"
+        function setupBackToTop() {
+            // Afficher/masquer le bouton selon le défilement
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // Remonter en haut quand on clique sur le bouton
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
         }
 
         // Configuration des écouteurs d'événements
