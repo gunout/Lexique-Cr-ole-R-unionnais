@@ -860,6 +860,7 @@ var dictionnaire = {
   "Chomiz ou Kabay ou Somiz ou Korsaz dosou": ": Chemise de nuit.",
   "Choser": ": Inquièter.",
   "Chouchou" : "christophine",
+  "Chouchoute" : "Bonbon la plim ou sexe de la femme",
   "Choz ou Soz": ": Chose.",
   "Chwa ou Choi ou Soi ou Swa": ": Choix.",
   "Chwingom ou Swingom ou Sinegom": ": Chewing-gum.",
