@@ -151,6 +151,25 @@
             opacity: 1;
         }
 
+        .music-status {
+            position: absolute;
+            top: 3.5rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--reunion-yellow);
+            font-family: 'Roboto Mono', monospace;
+            background: var(--bg-card);
+            padding: 0.3rem 0.5rem;
+            border: 1px solid var(--reunion-yellow);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .music-status.show {
+            opacity: 1;
+        }
+
         /* --- Main Layout --- */
         .app-container {
             display: flex;
@@ -806,6 +825,9 @@
             <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.5" title="Volume">
         </div>
         
+        <!-- Indicateur de statut de la musique -->
+        <div id="music-status" class="music-status"></div>
+        
         <div class="search-container">
             <input type="search" id="search-input" class="search-bar" placeholder="Rechercher un mot créole...">
             <div class="search-count" id="search-count">Tapez pour rechercher</div>
@@ -913,6 +935,7 @@
         const backgroundMusic = document.getElementById('background-music');
         const musicToggle = document.getElementById('music-toggle');
         const volumeSlider = document.getElementById('volume-slider');
+        const musicStatus = document.getElementById('music-status');
 
         // État de l'application
         let currentWords = [...wordsArray];
@@ -923,6 +946,8 @@
         let voices = [];
         let selectedVoice = null;
         let isMusicPlaying = false;
+        let musicLoaded = false;
+        let userInteraction = false;
 
         // Initialisation des voix
         function loadVoices() {
@@ -974,9 +999,6 @@
             
             // Récupérer l'état de la musique depuis le localStorage
             const savedMusicState = localStorage.getItem('creoleMusicState');
-            if (savedMusicState === 'playing') {
-                playMusic();
-            }
             
             // Événement pour le bouton de musique
             musicToggle.addEventListener('click', toggleMusic);
@@ -986,14 +1008,45 @@
                 backgroundMusic.volume = this.value;
             });
             
+            // Événements pour charger et gérer la musique
+            backgroundMusic.addEventListener('canplaythrough', function() {
+                musicLoaded = true;
+                console.log("Musique chargée avec succès");
+                if (savedMusicState === 'playing' && userInteraction) {
+                    playMusic();
+                }
+            });
+            
+            backgroundMusic.addEventListener('error', function(e) {
+                console.error("Erreur de chargement de la musique:", e);
+                showMusicStatus("Erreur: Fichier maloya.mp3 introuvable");
+                musicToggle.style.color = 'var(--reunion-red)';
+                musicToggle.style.borderColor = 'var(--reunion-red)';
+            });
+            
             // Gérer la fin de la musique pour la relancer
             backgroundMusic.addEventListener('ended', function() {
                 this.currentTime = 0;
                 this.play();
             });
+            
+            // Détecter l'interaction de l'utilisateur pour permettre l'autoplay
+            document.addEventListener('click', function() {
+                if (!userInteraction) {
+                    userInteraction = true;
+                    if (savedMusicState === 'playing' && musicLoaded) {
+                        playMusic();
+                    }
+                }
+            }, { once: true });
         }
 
         function toggleMusic() {
+            if (!musicLoaded) {
+                showMusicStatus("Chargement de la musique...");
+                return;
+            }
+            
             if (isMusicPlaying) {
                 pauseMusic();
             } else {
@@ -1002,14 +1055,22 @@
         }
 
         function playMusic() {
+            if (!musicLoaded) {
+                showMusicStatus("Musique en cours de chargement...");
+                return;
+            }
+            
             backgroundMusic.play().then(() => {
                 isMusicPlaying = true;
                 musicToggle.textContent = '🔊';
                 musicToggle.style.boxShadow = 'var(--neon-glow-yellow)';
                 localStorage.setItem('creoleMusicState', 'playing');
+                showMusicStatus("Musique: Lecture");
             }).catch(error => {
                 console.error("Erreur de lecture de la musique:", error);
-                // En cas d'erreur (par exemple autoplay bloqué), on ne fait rien
+                showMusicStatus("Erreur: Impossible de lire la musique");
+                musicToggle.style.color = 'var(--reunion-red)';
+                musicToggle.style.borderColor = 'var(--reunion-red)';
             });
         }
 
@@ -1019,6 +1080,16 @@
             musicToggle.textContent = '🎵';
             musicToggle.style.boxShadow = 'none';
             localStorage.setItem('creoleMusicState', 'paused');
+            showMusicStatus("Musique: Pause");
+        }
+
+        function showMusicStatus(message) {
+            musicStatus.textContent = message;
+            musicStatus.classList.add('show');
+            
+            setTimeout(() => {
+                musicStatus.classList.remove('show');
+            }, 3000);
         }
 
         // Initialisation
@@ -1035,6 +1106,9 @@
             loadVoices();
             setupEventListeners();
             setupBackToTop();
+            
+            // Tenter de charger le fichier audio
+            backgroundMusic.load();
         }
 
         // Création de la navigation alphabétique
