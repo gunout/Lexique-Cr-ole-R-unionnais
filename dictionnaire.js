@@ -4411,6 +4411,7 @@ var dictionnaire = {
   "vwar": "Voir",
   "vèy la kagnot": "Attendre un occasion propice",
   "vétian ou vetyan": "Batteur de tambour lors des cérémonies m",
+  "walaliwalala" : "parler pour rien dire", 
   "xagère": "Exagérer",
   "yab ou yabe": "Petit Blancs des hauts",
   "yang": "Haillons",
@@ -4492,5 +4493,20 @@ var dictionnaire = {
   "ou sa vi reste ?": "où tu habites ?",
   "quoué ou coué": "Quoi",
   "razwar a min": "Rasoir à main",
-  "zorèy": "Oreille"
-};
+  "zorèy": "Oreille , Metropolitains blancs",
+  "La lang na pwin le zo" : "la langue n’a pas d’os (La parole a peu de valeur).",
+  "Goni vid i tyen pa debout" : "un sac vide ne peut rester debout (L’estomac vide, on ne tient pas longtemps).",
+  "Fé pa la bou avan la pli" : "on ne fait pas la boue avant la pluie (Il ne faut pas mettre la charrue avant les bœufs).",
+  "Kan i koz ek boukané, sosis res pandiyé" : "quand on s’adresse au boucané, la saucisse reste sur le crochet (Quand on parle à Jacques, Paul n’intervient pas).",
+  "Bondié i puni pa le roche" : "Dieu ne punit pas les pierres (Un malheur n’arrive qu’à ceux qui le méritent).",
+  "Dann oui na pwin batay" : "dans oui, il n’y a pas de bataille (Il est facile de dire oui pour éviter la discussion).",
+  "Gro poison i bèk si le tar" : "le gros poisson mord sur le tard (Tout vient à qui sait attendre).", 
+  "I geyn le pus a fors frékant le sien" : "à force de fréquenter les chiens, on attrape des puces (Les mauvaises fréquentations mènent à la perte).",
+  "An atendan, kabri i manz salad" : "en attendant, la chèvre mange la salade (Sans solution, un problème perdure).",
+  "La pasians i géri la gal" : "la patience guérit la gale. (Avec de la patience, on peut tout guérir).",
+  "Na in zour i apèl demin" : "demain arrive. (La roue tourne).",
+  "Fourmi i mars sous la tèr, domoun i koné" : "les fourmis marchent sous le sol, tout le monde est au courant (Quand on fait quelque chose en cachette, ça finit par se savoir).",
+  "Zanfan i plèr pa i gyen pa tété" : "l’enfant qui ne pleure pas n’aura pas son lait (Il faut oser demander ce que l’on veut).",
+  "Ou donn in pié, i pran le karo" : "on donne un plant, on vous prend le champ entier (On donne un doigt, il prend le bras).",
+  "Ti ash i koup gro bwa" : "une petite hache peut couper une grosse bûche (A force de patience, on peut arriver à tout)."
+  };
