@@ -147,6 +147,14 @@
             cursor: pointer;
         }
 
+        .track-info {
+            color: var(--reunion-yellow);
+            font-size: 0.8rem;
+            font-family: 'Roboto Mono', monospace;
+            margin-left: 10px;
+            text-shadow: var(--neon-glow-yellow);
+        }
+
         .music-btn.playing {
             animation: pulse-yellow 2s infinite;
         }
@@ -798,7 +806,6 @@
 </head>
 <body>
     <!-- Élément audio pour la musique de fond -->
-    <!-- L'attribut 'loop' est retiré car la boucle est gérée par JavaScript -->
     <audio id="background-music"></audio>
 
     <header class="top-header">
@@ -807,8 +814,11 @@
         
         <!-- Contrôles musique -->
         <div class="music-controls">
+            <button id="prev-btn" class="music-btn" title="Piste précédente">⏮</button>
             <button id="music-toggle" class="music-btn" title="Activer/Désactiver la musique">🎵</button>
+            <button id="next-btn" class="music-btn" title="Piste suivante">⏭</button>
             <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.3" title="Volume">
+            <span id="track-info" class="track-info">1/3</span>
         </div>
         
         <div class="search-container">
@@ -918,6 +928,9 @@
         const backgroundMusic = document.getElementById('background-music');
         const musicToggle = document.getElementById('music-toggle');
         const volumeSlider = document.getElementById('volume-slider');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const trackInfo = document.getElementById('track-info');
 
         // État de l'application
         let currentWords = [...wordsArray];
@@ -929,17 +942,16 @@
         let selectedVoice = null;
         let isMusicPlaying = false;
 
-        // --- DÉBUT DES CORRECTIONS MUSIQUE ---
+        // --- CORRECTIONS POUR LA FONCTIONNALITÉ DE PLAYLIST ---
 
-        // URL jsDelivr pour la musique Maloya
-        // CORRECTION: Remplacement des points-virgules par des virgules
-        const MALOYA_URL = [ 
+        // Playlist avec les trois chansons
+        const PLAYLIST = [
             'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/maloya.mp3',
             'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/ifoviv.mp3',
             'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/starshit.mp3'
         ];
 
-        // AJOUT: Variable pour suivre l'index de la piste actuelle
+        // Variable pour suivre l'index de la piste actuelle
         let currentTrackIndex = 0;
 
         // Gestion de la musique
@@ -956,8 +968,10 @@
             // Charger la première piste au démarrage
             loadTrack(currentTrackIndex);
             
-            // Événement pour le bouton de musique
+            // Événements pour les boutons de musique
             musicToggle.addEventListener('click', toggleMusic);
+            prevBtn.addEventListener('click', previousTrack);
+            nextBtn.addEventListener('click', nextTrack);
             
             // Événement pour le slider de volume
             volumeSlider.addEventListener('input', function() {
@@ -966,12 +980,12 @@
                 localStorage.setItem('creoleMusicVolume', volume);
             });
             
-            // CORRECTION: Gérer la fin de la musique pour passer à la piste suivante
+            // Événement pour la fin de la musique
             backgroundMusic.addEventListener('ended', nextTrack);
             
             // Gérer les erreurs audio en passant à la piste suivante
             backgroundMusic.addEventListener('error', function(e) {
-                console.error("Erreur audio sur la piste:", MALOYA_URL[currentTrackIndex], e);
+                console.error("Erreur audio sur la piste:", PLAYLIST[currentTrackIndex], e);
                 nextTrack();
             });
             
@@ -983,15 +997,15 @@
             }
         }
 
-        // CORRECTION: Fonction pour charger une piste spécifique
+        // Fonction pour charger une piste spécifique
         function loadTrack(index) {
-            console.log(`Chargement de la piste ${index + 1}/${MALOYA_URL.length} :`, MALOYA_URL[index]);
+            console.log(`Chargement de la piste ${index + 1}/${PLAYLIST.length}:`, PLAYLIST[index]);
             
             musicToggle.classList.add('music-loading');
             musicToggle.textContent = '⏳';
             musicToggle.title = 'Chargement de la musique...';
             
-            backgroundMusic.src = MALOYA_URL[index];
+            backgroundMusic.src = PLAYLIST[index];
             backgroundMusic.load();
             
             backgroundMusic.addEventListener('canplaythrough', function onCanPlay() {
@@ -1000,6 +1014,7 @@
                 musicToggle.textContent = '▶️';
                 musicToggle.title = 'Musique prête - Cliquer pour démarrer';
                 musicToggle.classList.remove('music-loading');
+                updateTrackInfo();
                 
                 // Si la musique était en cours de lecture, la démarrer
                 if (isMusicPlaying) {
@@ -1008,12 +1023,23 @@
             }, { once: true });
         }
 
-        // CORRECTION: Fonction pour passer à la piste suivante
+        // Fonction pour passer à la piste suivante
         function nextTrack() {
-            // Incrémenter l'index et boucler à la fin avec l'opérateur modulo
-            currentTrackIndex = (currentTrackIndex + 1) % MALOYA_URL.length;
-            console.log(`Passage à la piste suivante, index : ${currentTrackIndex}`);
+            currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
+            console.log(`Passage à la piste suivante, index: ${currentTrackIndex}`);
             loadTrack(currentTrackIndex);
+        }
+
+        // Fonction pour passer à la piste précédente
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+            console.log(`Passage à la piste précédente, index: ${currentTrackIndex}`);
+            loadTrack(currentTrackIndex);
+        }
+
+        // Fonction pour mettre à jour l'affichage de la piste actuelle
+        function updateTrackInfo() {
+            trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
         }
 
         function toggleMusic() {
