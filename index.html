@@ -930,15 +930,10 @@
         let selectedVoice = null;
         let isMusicPlaying = false;
 
-        // URLs alternatives pour la musique
-        const musicSources = [
-            'https://cdn.jsdelivr.net/gh/gunout/Lexique-Cr-ole-R-unionnais@main/maloya.mp3'
-            'maloya.mp3',
-            'https://corsproxy.io/?https://raw.githubusercontent.com/gunout/Lexique-Cr-ole-R-unionnais/main/maloya.mp3'
-            
-        ];
+        // URL jsDelivr pour la musique Maloya
+        const MALOYA_URL = 'https://cdn.jsdelivr.net/gh/gunout/Lexique-Cr-ole-R-unionnais@main/maloya.mp3';
 
-        // Gestion de la musique - Version corrigée
+        // Gestion de la musique
         function setupMusicControls() {
             // Définir le volume initial
             const savedVolume = localStorage.getItem('creoleMusicVolume');
@@ -949,16 +944,17 @@
                 backgroundMusic.volume = volumeSlider.value;
             }
             
-            // Essayer de charger la musique depuis différentes sources
-            loadMusicFromSources();
+            // Charger la musique depuis jsDelivr
+            loadMusic();
             
             // Événement pour le bouton de musique
             musicToggle.addEventListener('click', toggleMusic);
             
             // Événement pour le slider de volume
             volumeSlider.addEventListener('input', function() {
-                backgroundMusic.volume = this.value;
-                localStorage.setItem('creoleMusicVolume', this.value);
+                const volume = this.value;
+                backgroundMusic.volume = volume;
+                localStorage.setItem('creoleMusicVolume', volume);
             });
             
             // Gérer la fin de la musique pour la relancer
@@ -972,58 +968,52 @@
             // Gérer les erreurs audio
             backgroundMusic.addEventListener('error', function(e) {
                 console.error("Erreur audio:", e);
-                tryNextMusicSource();
+                musicToggle.textContent = '❌';
+                musicToggle.title = 'Erreur de chargement de la musique';
+                musicToggle.classList.remove('music-loading');
             });
             
             // Charger l'état de la musique sauvegardé
             const savedMusicState = localStorage.getItem('creoleMusicState');
             if (savedMusicState === 'playing') {
-                // On attendra que l'utilisateur interagisse pour démarrer
                 musicToggle.textContent = '▶️';
                 musicToggle.title = 'Musique prête - Cliquer pour démarrer';
             }
         }
 
-        function loadMusicFromSources() {
-            let currentSourceIndex = 0;
-            
-            function tryNextMusicSource() {
-                if (currentSourceIndex < musicSources.length) {
-                    const source = musicSources[currentSourceIndex];
-                    console.log("Essai de chargement depuis:", source);
-                    
-                    backgroundMusic.src = source;
-                    backgroundMusic.load();
-                    
-                    backgroundMusic.addEventListener('canplaythrough', function onCanPlay() {
-                        console.log("Musique chargée depuis:", source);
-                        backgroundMusic.removeEventListener('canplaythrough', onCanPlay);
-                        musicToggle.textContent = '▶️';
-                        musicToggle.title = 'Musique prête - Cliquer pour démarrer';
-                        musicToggle.classList.remove('music-loading');
-                    }, { once: true });
-                    
-                    backgroundMusic.addEventListener('error', function onError() {
-                        console.error("Échec du chargement depuis:", source);
-                        backgroundMusic.removeEventListener('error', onError);
-                        currentSourceIndex++;
-                        tryNextMusicSource();
-                    }, { once: true });
-                    
-                    currentSourceIndex++;
-                } else {
-                    console.error("Toutes les sources ont échoué");
-                    musicToggle.textContent = '❌';
-                    musicToggle.title = 'Musique non disponible';
-                    musicToggle.classList.remove('music-loading');
-                    musicToggle.disabled = true;
-                }
-            }
+        function loadMusic() {
+            console.log("Chargement de la musique depuis:", MALOYA_URL);
             
             musicToggle.classList.add('music-loading');
             musicToggle.textContent = '⏳';
             musicToggle.title = 'Chargement de la musique...';
-            tryNextMusicSource();
+            
+            backgroundMusic.src = MALOYA_URL;
+            backgroundMusic.load();
+            
+            backgroundMusic.addEventListener('canplaythrough', function onCanPlay() {
+                console.log("Musique chargée avec succès");
+                backgroundMusic.removeEventListener('canplaythrough', onCanPlay);
+                musicToggle.textContent = '▶️';
+                musicToggle.title = 'Musique prête - Cliquer pour démarrer';
+                musicToggle.classList.remove('music-loading');
+                
+                // Si la musique était en cours de lecture avant, la redémarrer
+                const savedMusicState = localStorage.getItem('creoleMusicState');
+                if (savedMusicState === 'playing') {
+                    // Attendre une interaction utilisateur pour démarrer
+                    musicToggle.textContent = '▶️';
+                    musicToggle.title = 'Cliquer pour démarrer la musique';
+                }
+            }, { once: true });
+            
+            backgroundMusic.addEventListener('error', function onError(e) {
+                console.error("Erreur de chargement de la musique:", e);
+                backgroundMusic.removeEventListener('error', onError);
+                musicToggle.textContent = '❌';
+                musicToggle.title = 'Musique non disponible';
+                musicToggle.classList.remove('music-loading');
+            }, { once: true });
         }
 
         function toggleMusic() {
@@ -1035,7 +1025,6 @@
         }
 
         function playMusic() {
-            // Pour débloquer l'audio sur certains navigateurs
             const playPromise = backgroundMusic.play();
             
             if (playPromise !== undefined) {
