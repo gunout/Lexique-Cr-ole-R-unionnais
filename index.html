@@ -150,7 +150,6 @@
             align-items: flex-start;
             gap: 2px;
             margin-left: 10px;
-            max-width: 220px;
         }
 
         .track-info {
@@ -161,20 +160,24 @@
             white-space: nowrap;
         }
 
+        .track-title-mask {
+            width: 220px;
+            overflow: hidden;
+            position: relative;
+            height: 1rem;
+        }
+
         .track-title {
             color: var(--reunion-white);
             font-size: 0.7rem;
             font-family: 'Roboto Mono', monospace;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 220px;
+            display: inline-block;
             opacity: 0.8;
-            position: relative;
+            transform: translateX(0);
         }
 
         .track-title.defile {
-            text-overflow: clip;
             animation: defilement 15s linear infinite;
         }
 
@@ -183,16 +186,10 @@
         }
 
         @keyframes defilement {
-            0% {
+            0%, 10% {
                 transform: translateX(0);
             }
-            10% {
-                transform: translateX(0);
-            }
-            90% {
-                transform: translateX(calc(-100% + 220px));
-            }
-            100% {
+            90%, 100% {
                 transform: translateX(calc(-100% + 220px));
             }
         }
@@ -765,8 +762,8 @@
                 flex-wrap: wrap;
             }
 
-            .track-info-container {
-                max-width: 100%;
+            .track-title-mask {
+                width: 180px;
             }
         }
 
@@ -856,7 +853,9 @@
             <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.3" title="Volume">
             <div class="track-info-container">
                 <span id="track-info" class="track-info">0/0</span>
-                <span id="track-title" class="track-title">Chargement...</span>
+                <div class="track-title-mask">
+                    <span id="track-title" class="track-title">Chargement...</span>
+                </div>
             </div>
         </div>
         
@@ -1067,17 +1066,20 @@
             
             trackTitle.textContent = titre;
             trackTitle.title = PLAYLIST_TITLES[currentTrackIndex];
+            trackTitle.classList.remove('defile');
+            trackTitle.style.transform = 'translateX(0)';
             
             setTimeout(() => {
                 const largeurTitre = trackTitle.scrollWidth;
-                const largeurConteneur = 220;
+                const largeurMasque = 220;
                 
-                if (largeurTitre > largeurConteneur) {
+                console.log(`📏 Titre: "${titre}" | Largeur: ${largeurTitre}px | Masque: ${largeurMasque}px`);
+                
+                if (largeurTitre > largeurMasque) {
                     trackTitle.classList.add('defile');
-                } else {
-                    trackTitle.classList.remove('defile');
+                    console.log('✅ Défilement activé');
                 }
-            }, 50);
+            }, 100);
         }
 
         function loadTrack(index) {
