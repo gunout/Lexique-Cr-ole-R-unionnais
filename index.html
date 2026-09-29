@@ -76,7 +76,6 @@
 
         .track-banner {
             flex: 1;
-            max-width: 400px;
             display: flex;
             align-items: center;
             gap: 0.8rem;
@@ -689,7 +688,6 @@
 
             .track-banner {
                 width: 100%;
-                max-width: 100%;
                 order: 3;
             }
 
@@ -1092,7 +1090,7 @@
         }
 
         // ============================================================
-        // DÉFILEMENT JAVASCRIPT PUR
+        // DÉFILEMENT JAVASCRIPT PUR (requestAnimationFrame)
         // ============================================================
         let defilementAnimationId = null;
         let defilementEnPause = false;
@@ -1113,15 +1111,19 @@
             const largeurMasque = masque.clientWidth;
             const largeurTexte = trackTitle.scrollWidth;
             
+            // Si le texte est plus court que le masque, on ne défile pas
             if (largeurTexte <= largeurMasque) {
                 trackTitle.style.transform = 'translateX(0)';
-                console.log(`⏸️ Titre court (${largeurTexte}px ≤ ${largeurMasque}px), pas de défilement`);
+                console.log('⏸️ Titre court, pas de défilement');
                 return;
             }
             
             console.log(`✅ Défilement ACTIVÉ (texte ${largeurTexte}px > masque ${largeurMasque}px)`);
             
+            // Position de départ : à droite du masque
             let position = largeurMasque;
+            
+            // Vitesse en pixels par seconde (ajustable)
             const vitesse = 50;
             let dernierTemps = performance.now();
             
@@ -1137,6 +1139,7 @@
                 
                 position -= vitesse * deltaSecondes;
                 
+                // Quand le texte est complètement sorti à gauche, on recommence à droite
                 if (position < -largeurTexte) {
                     position = largeurMasque;
                 }
@@ -1156,6 +1159,7 @@
                 return;
             }
             
+            // Arrêter l'ancien défilement
             arreterDefilement();
             
             trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
@@ -1172,11 +1176,13 @@
             trackTitle.title = PLAYLIST_TITLES[currentTrackIndex];
             trackTitle.style.transform = 'translateX(0)';
             
+            // Attendre que le DOM soit prêt pour mesurer
             setTimeout(() => {
                 demarrerDefilement();
             }, 150);
         }
 
+        // Pause au survol du bandeau
         document.addEventListener('mouseover', (e) => {
             if (e.target.closest('.track-banner')) {
                 defilementEnPause = true;
