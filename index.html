@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="dictionnaire.js"></script>
+    <script src="playlist.js"></script>
     <style>
         :root {
             --reunion-blue: #0055A4;
@@ -102,7 +103,6 @@
             font-family: 'Roboto Mono', monospace;
         }
 
-        /* --- Contrôles musique --- */
         .music-controls {
             position: absolute;
             top: 1rem;
@@ -150,7 +150,7 @@
             align-items: flex-start;
             gap: 2px;
             margin-left: 10px;
-            max-width: 200px;
+            max-width: 220px;
         }
 
         .track-info {
@@ -168,7 +168,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 200px;
+            max-width: 220px;
             opacity: 0.8;
         }
 
@@ -187,7 +187,6 @@
             100% { box-shadow: 0 0 5px var(--reunion-yellow); }
         }
 
-        /* --- Main Layout --- */
         .app-container {
             display: flex;
             min-height: calc(100vh - 180px);
@@ -956,30 +955,29 @@
         let isMusicPlaying = false;
 
         // ============================================================
-        // PLAYLIST DYNAMIQUE (API Radio Gleaphe)
+        // PLAYLIST LOCALE (chargée depuis playlist.js)
         // ============================================================
         let PLAYLIST = [];
         let PLAYLIST_TITLES = [];
         let playlistChargee = false;
         let currentTrackIndex = 0;
 
-        const API_URL = 'https://radio-gleaphe.duckdns.org/api/tracks';
         const BASE_URL = 'https://radio-gleaphe.duckdns.org';
 
-        async function chargerPlaylist() {
+        function chargerPlaylist() {
             try {
-                console.log("🎵 Chargement de la playlist depuis l'API...");
+                console.log("🎵 Chargement de la playlist locale...");
                 musicToggle.classList.add('music-loading');
                 musicToggle.textContent = '⏳';
                 musicToggle.title = 'Chargement de la playlist...';
                 trackTitle.textContent = 'Chargement...';
                 
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                // Vérifier que les données sont disponibles
+                if (typeof PLAYLIST_DATA === 'undefined' || !Array.isArray(PLAYLIST_DATA)) {
+                    throw new Error("PLAYLIST_DATA non trouvée. Vérifiez que playlist.js est bien chargé.");
                 }
                 
-                const data = await response.json();
+                const data = PLAYLIST_DATA;
                 console.log(`📦 ${data.length} pistes reçues`);
                 
                 PLAYLIST = [];
@@ -1004,6 +1002,7 @@
                 }
                 
                 console.log(`✅ ${PLAYLIST.length} pistes chargées`);
+                console.log(`Exemple : ${PLAYLIST[0]}`);
                 
                 playlistChargee = true;
                 trackInfo.textContent = `1/${PLAYLIST.length}`;
@@ -1019,13 +1018,8 @@
                 console.error("❌ Erreur chargement playlist:", error);
                 musicToggle.classList.remove('music-loading');
                 musicToggle.textContent = '❌';
-                musicToggle.title = `Erreur : ${error.message} - Cliquer pour réessayer`;
+                musicToggle.title = `Erreur : ${error.message}`;
                 trackTitle.textContent = 'Erreur de chargement';
-                
-                musicToggle.onclick = () => {
-                    musicToggle.onclick = toggleMusic;
-                    chargerPlaylist();
-                };
             }
         }
 
@@ -1038,9 +1032,7 @@
             
             trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
             
-            // Nettoyer le titre pour l'affichage
             let titre = PLAYLIST_TITLES[currentTrackIndex] || 'Sans titre';
-            // Enlever les suffixes longs et underscores
             titre = titre
                 .replace(/_-_cd_-_hq.*$/, '')
                 .replace(/_-_cd_.*$/, '')
@@ -1048,7 +1040,6 @@
                 .replace(/\s+/g, ' ')
                 .trim();
             
-            // Tronquer si trop long
             if (titre.length > 40) {
                 titre = titre.substring(0, 40) + '...';
             }
@@ -1087,14 +1078,14 @@
         function nextTrack() {
             if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
-            console.log(`Passage à la piste suivante, index: ${currentTrackIndex}`);
+            console.log(`Piste suivante, index: ${currentTrackIndex}`);
             loadTrack(currentTrackIndex);
         }
 
         function previousTrack() {
             if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
-            console.log(`Passage à la piste précédente, index: ${currentTrackIndex}`);
+            console.log(`Piste précédente, index: ${currentTrackIndex}`);
             loadTrack(currentTrackIndex);
         }
 
