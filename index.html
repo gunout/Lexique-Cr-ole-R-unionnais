@@ -170,6 +170,31 @@
             text-overflow: ellipsis;
             max-width: 220px;
             opacity: 0.8;
+            position: relative;
+        }
+
+        .track-title.defile {
+            text-overflow: clip;
+            animation: defilement 15s linear infinite;
+        }
+
+        .track-title.defile:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes defilement {
+            0% {
+                transform: translateX(0);
+            }
+            10% {
+                transform: translateX(0);
+            }
+            90% {
+                transform: translateX(calc(-100% + 220px));
+            }
+            100% {
+                transform: translateX(calc(-100% + 220px));
+            }
         }
 
         .music-btn.playing {
@@ -972,7 +997,6 @@
                 musicToggle.title = 'Chargement de la playlist...';
                 trackTitle.textContent = 'Chargement...';
                 
-                // Vérifier que les données sont disponibles
                 if (typeof PLAYLIST_DATA === 'undefined' || !Array.isArray(PLAYLIST_DATA)) {
                     throw new Error("PLAYLIST_DATA non trouvée. Vérifiez que playlist.js est bien chargé.");
                 }
@@ -1027,6 +1051,7 @@
             if (!playlistChargee || PLAYLIST.length === 0) {
                 trackInfo.textContent = '0/0';
                 trackTitle.textContent = '-';
+                trackTitle.classList.remove('defile');
                 return;
             }
             
@@ -1040,12 +1065,19 @@
                 .replace(/\s+/g, ' ')
                 .trim();
             
-            if (titre.length > 40) {
-                titre = titre.substring(0, 40) + '...';
-            }
-            
             trackTitle.textContent = titre;
             trackTitle.title = PLAYLIST_TITLES[currentTrackIndex];
+            
+            setTimeout(() => {
+                const largeurTitre = trackTitle.scrollWidth;
+                const largeurConteneur = 220;
+                
+                if (largeurTitre > largeurConteneur) {
+                    trackTitle.classList.add('defile');
+                } else {
+                    trackTitle.classList.remove('defile');
+                }
+            }, 50);
         }
 
         function loadTrack(index) {
