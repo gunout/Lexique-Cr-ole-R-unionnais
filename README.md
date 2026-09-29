@@ -1,4 +1,4 @@
-# 🗣️ Lexique Créole Réunionnais // Source: mi-aime-a-ou.com // Dictionnaire interactif - ( 4600 mots ) *
+# 🗣️ Lexique Créole Réunionnais // Source: mi-aime-a-ou.com // Dictionnaire interactif - ( 5472 mots ) *
 
 **Dictionnaire interactif Kréol Rényoné ↔ Français**
 
