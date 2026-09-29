@@ -119,24 +119,8 @@
             position: absolute;
             left: 0;
             top: 0;
+            will-change: transform;
             transform: translateX(0);
-        }
-
-        .track-title.defile {
-            animation: defilement-banner linear infinite;
-        }
-
-        .track-title.defile:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes defilement-banner {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(calc(-1 * var(--largeur-titre, 100%)));
-            }
         }
 
         .music-controls {
@@ -1093,7 +1077,7 @@
                 loadTrack(currentTrackIndex);
                 
                 window.addEventListener('resize', () => {
-                    setTimeout(updateTrackInfo, 100);
+                    setTimeout(updateTrackInfo, 200);
                 });
                 
             } catch (error) {
@@ -1105,13 +1089,78 @@
             }
         }
 
+        // ============================================================
+        // DÉFILEMENT JAVASCRIPT PUR (requestAnimationFrame)
+        // ============================================================
+        let defilementAnimationId = null;
+        let defilementEnPause = false;
+
+        function arreterDefilement() {
+            if (defilementAnimationId !== null) {
+                cancelAnimationFrame(defilementAnimationId);
+                defilementAnimationId = null;
+            }
+        }
+
+        function demarrerDefilement() {
+            arreterDefilement();
+            
+            const masque = document.querySelector('.track-title-mask');
+            if (!masque) return;
+            
+            const largeurMasque = masque.clientWidth;
+            const largeurTexte = trackTitle.scrollWidth;
+            
+            // Si le texte est plus court que le masque, on ne défile pas
+            if (largeurTexte <= largeurMasque) {
+                trackTitle.style.transform = 'translateX(0)';
+                console.log('⏸️ Titre court, pas de défilement');
+                return;
+            }
+            
+            console.log(`✅ Défilement ACTIVÉ (texte ${largeurTexte}px > masque ${largeurMasque}px)`);
+            
+            // Position de départ : à droite du masque
+            let position = largeurMasque;
+            
+            // Vitesse en pixels par seconde (ajustable)
+            const vitesse = 50;
+            let dernierTemps = performance.now();
+            
+            function animer(tempsActuel) {
+                if (defilementEnPause) {
+                    dernierTemps = tempsActuel;
+                    defilementAnimationId = requestAnimationFrame(animer);
+                    return;
+                }
+                
+                const deltaSecondes = (tempsActuel - dernierTemps) / 1000;
+                dernierTemps = tempsActuel;
+                
+                position -= vitesse * deltaSecondes;
+                
+                // Quand le texte est complètement sorti à gauche, on recommence à droite
+                if (position < -largeurTexte) {
+                    position = largeurMasque;
+                }
+                
+                trackTitle.style.transform = `translateX(${position}px)`;
+                defilementAnimationId = requestAnimationFrame(animer);
+            }
+            
+            defilementAnimationId = requestAnimationFrame(animer);
+        }
+
         function updateTrackInfo() {
             if (!playlistChargee || PLAYLIST.length === 0) {
                 trackInfo.textContent = '0/0';
                 trackTitle.textContent = '-';
-                trackTitle.classList.remove('defile');
+                arreterDefilement();
                 return;
             }
+            
+            // Arrêter l'ancien défilement
+            arreterDefilement();
             
             trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
             
@@ -1125,30 +1174,30 @@
             
             trackTitle.textContent = titre;
             trackTitle.title = PLAYLIST_TITLES[currentTrackIndex];
-            trackTitle.classList.remove('defile');
             trackTitle.style.transform = 'translateX(0)';
             
+            // Attendre que le DOM soit prêt pour mesurer
             setTimeout(() => {
-                const masque = document.querySelector('.track-title-mask');
-                if (!masque) return;
-                
-                const largeurTitre = trackTitle.scrollWidth;
-                const largeurMasque = masque.clientWidth;
-                
-                console.log(`📏 Titre: "${titre}" | Texte: ${largeurTitre}px | Masque: ${largeurMasque}px`);
-                
-                if (largeurTitre > largeurMasque) {
-                    const duree = Math.max(8, largeurTitre / 40);
-                    trackTitle.style.setProperty('--largeur-titre', largeurTitre + 'px');
-                    trackTitle.style.animationDuration = duree + 's';
-                    trackTitle.classList.add('defile');
-                    console.log(`✅ Défilement ACTIVÉ (${duree.toFixed(1)}s, ${largeurTitre}px)`);
-                } else {
-                    console.log('⏸️ Titre court, pas de défilement');
-                }
-            }, 100);
+                demarrerDefilement();
+            }, 150);
         }
 
+        // Pause au survol du bandeau
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.track-banner')) {
+                defilementEnPause = true;
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('.track-banner')) {
+                defilementEnPause = false;
+            }
+        });
+
+        // ============================================================
+        // LECTEUR AUDIO
+        // ============================================================
         function loadTrack(index) {
             if (!playlistChargee || PLAYLIST.length === 0) {
                 console.warn("Playlist non chargée");
@@ -1177,12 +1226,14 @@
         }
 
         function nextTrack() {
+            arreterDefilement();
             if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
             loadTrack(currentTrackIndex);
         }
 
         function previousTrack() {
+            arreterDefilement();
             if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
             loadTrack(currentTrackIndex);
