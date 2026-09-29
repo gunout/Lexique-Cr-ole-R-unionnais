@@ -149,6 +149,6 @@ Le contenu linguistique (mots, définitions, proverbes) reste la propriété int
 
 **Fait avec ❤️ à La Réunion** 🌋🏝️
 
-*Nout' lang, nout' kiltir, nout' loryan* 🇷🇪
+*Nout' lang, nout' kiltir,  🇷🇪
 
 </div>
