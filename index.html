@@ -9,16 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="dictionnaire.js"></script>
     <style>
-        /* --- Variables & Global Styles --- */
         :root {
-            /* Couleurs du drapeau de La Réunion */
             --reunion-blue: #0055A4;
             --reunion-yellow: #FFCE00;
             --reunion-red: #EF4135;
             --reunion-white: #FFFFFF;
             --reunion-black: #000000;
 
-            /* Thème Cyberpunk */
             --bg-primary: #0a0a0a;
             --bg-secondary: #1a1a1a;
             --bg-card: rgba(26, 26, 26, 0.7);
@@ -46,7 +43,6 @@
                 repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
         }
 
-        /* --- Header --- */
         .top-header {
             background-color: var(--bg-secondary);
             padding: 1.5rem 1rem;
@@ -115,6 +111,7 @@
             align-items: center;
             gap: 0.5rem;
             z-index: 100;
+            flex-wrap: wrap;
         }
 
         .music-btn {
@@ -147,12 +144,32 @@
             cursor: pointer;
         }
 
+        .track-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            margin-left: 10px;
+            max-width: 200px;
+        }
+
         .track-info {
             color: var(--reunion-yellow);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-family: 'Roboto Mono', monospace;
-            margin-left: 10px;
             text-shadow: var(--neon-glow-yellow);
+            white-space: nowrap;
+        }
+
+        .track-title {
+            color: var(--reunion-white);
+            font-size: 0.7rem;
+            font-family: 'Roboto Mono', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            opacity: 0.8;
         }
 
         .music-btn.playing {
@@ -180,7 +197,6 @@
             gap: 1.5rem;
         }
 
-        /* --- Sidebar --- */
         .sidebar {
             flex: 0 0 280px;
             background: var(--bg-card);
@@ -263,7 +279,6 @@
             text-shadow: var(--neon-glow-yellow);
         }
 
-        /* --- Main Content --- */
         .main-content {
             flex: 1;
         }
@@ -312,7 +327,6 @@
             box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
 
-        /* --- Word Grid --- */
         .word-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -410,7 +424,6 @@
             flex-grow: 1;
         }
 
-        /* --- List View --- */
         .word-list {
             display: none;
             animation: fadeIn 0.5s ease-in-out;
@@ -452,7 +465,6 @@
             max-width: 60%;
         }
 
-        /* --- Modal --- */
         .modal {
             display: none;
             position: fixed;
@@ -568,7 +580,6 @@
             font-size: 0.8rem;
         }
 
-        /* --- Back to Top Button --- */
         .back-to-top {
             position: fixed;
             bottom: 20px;
@@ -598,7 +609,6 @@
             display: flex;
         }
 
-        /* --- Animations --- */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -615,7 +625,6 @@
             100% { filter: drop-shadow(0 0 5px var(--reunion-red)); }
         }
 
-        /* --- Responsive --- */
         @media (max-width: 1024px) {
             .app-container {
                 flex-direction: column;
@@ -729,6 +738,11 @@
                 position: static;
                 justify-content: center;
                 margin-top: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .track-info-container {
+                max-width: 100%;
             }
         }
 
@@ -805,20 +819,21 @@
     </style>
 </head>
 <body>
-    <!-- Élément audio pour la musique de fond -->
     <audio id="background-music"></audio>
 
     <header class="top-header">
         <div class="logo">🗣️ Lexique Créole</div>
         <div class="subtitle">Dictionnaire interactif  // <span id="total-words">0</span> mots dans la base</div>
         
-        <!-- Contrôles musique -->
         <div class="music-controls">
             <button id="prev-btn" class="music-btn" title="Piste précédente">⏮</button>
             <button id="music-toggle" class="music-btn" title="Activer/Désactiver la musique">🎵</button>
             <button id="next-btn" class="music-btn" title="Piste suivante">⏭</button>
             <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.3" title="Volume">
-            <span id="track-info" class="track-info">1/3</span>
+            <div class="track-info-container">
+                <span id="track-info" class="track-info">0/0</span>
+                <span id="track-title" class="track-title">Chargement...</span>
+            </div>
         </div>
         
         <div class="search-container">
@@ -831,9 +846,7 @@
         <aside class="sidebar">
             <h2>Navigation</h2>
             
-            <div class="alphabet-nav" id="alphabet-nav">
-                <!-- Les boutons de l'alphabet seront générés ici -->
-            </div>
+            <div class="alphabet-nav" id="alphabet-nav"></div>
 
             <div class="stats">
                 <div class="stat-item">
@@ -860,20 +873,13 @@
                 </div>
             </div>
 
-            <div class="word-grid" id="word-grid">
-                <!-- Les cartes des mots seront générés ici -->
-            </div>
-
-            <div class="word-list" id="word-list">
-                <!-- La liste des mots sera générée ici -->
-            </div>
+            <div class="word-grid" id="word-grid"></div>
+            <div class="word-list" id="word-list"></div>
         </main>
     </div>
 
-    <!-- Bouton pour remonter en haut -->
     <button class="back-to-top" id="back-to-top" title="Remonter en haut">↑</button>
 
-    <!-- Modal pour afficher les détails d'un mot -->
     <div id="word-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -896,7 +902,9 @@
     </div>
 
     <script>
-        // Conversion du dictionnaire en tableau utilisable
+        // ============================================================
+        // DONNÉES DU DICTIONNAIRE
+        // ============================================================
         const wordsArray = Object.entries(dictionnaire).map(([word, definition], index) => ({
             id: index,
             word: word,
@@ -904,7 +912,9 @@
             firstLetter: word.charAt(0).toUpperCase()
         }));
 
-        // Éléments du DOM
+        // ============================================================
+        // ÉLÉMENTS DU DOM
+        // ============================================================
         const searchInput = document.getElementById('search-input');
         const searchCount = document.getElementById('search-count');
         const totalWords = document.getElementById('total-words');
@@ -924,15 +934,18 @@
         const currentViewTitle = document.getElementById('current-view-title');
         const backToTopBtn = document.getElementById('back-to-top');
 
-        // Éléments pour la musique
+        // Éléments musique
         const backgroundMusic = document.getElementById('background-music');
         const musicToggle = document.getElementById('music-toggle');
         const volumeSlider = document.getElementById('volume-slider');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const trackInfo = document.getElementById('track-info');
+        const trackTitle = document.getElementById('track-title');
 
-        // État de l'application
+        // ============================================================
+        // ÉTAT DE L'APPLICATION
+        // ============================================================
         let currentWords = [...wordsArray];
         let currentLetter = 'all';
         let currentView = 'grid';
@@ -942,104 +955,147 @@
         let selectedVoice = null;
         let isMusicPlaying = false;
 
-        // --- CORRECTIONS POUR LA FONCTIONNALITÉ DE PLAYLIST ---
-
-        // Playlist avec les trois chansons
-        const PLAYLIST = [
-            'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/maloya.mp3',
-            'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/i%20fo%20viv.mp3',
-            'https://cdn.jsdelivr.net/gh/gunout/Dedicace@main/music/star%20shit.mp3'
-        ];
-
-        // Variable pour suivre l'index de la piste actuelle
+        // ============================================================
+        // PLAYLIST DYNAMIQUE (API Radio Gleaphe)
+        // ============================================================
+        let PLAYLIST = [];
+        let PLAYLIST_TITLES = [];
+        let playlistChargee = false;
         let currentTrackIndex = 0;
 
-        // Gestion de la musique
-        function setupMusicControls() {
-            // Définir le volume initial
-            const savedVolume = localStorage.getItem('creoleMusicVolume');
-            if (savedVolume) {
-                backgroundMusic.volume = savedVolume;
-                volumeSlider.value = savedVolume;
-            } else {
-                backgroundMusic.volume = volumeSlider.value;
-            }
-            
-            // Charger la première piste au démarrage
-            loadTrack(currentTrackIndex);
-            
-            // Événements pour les boutons de musique
-            musicToggle.addEventListener('click', toggleMusic);
-            prevBtn.addEventListener('click', previousTrack);
-            nextBtn.addEventListener('click', nextTrack);
-            
-            // Événement pour le slider de volume
-            volumeSlider.addEventListener('input', function() {
-                const volume = this.value;
-                backgroundMusic.volume = volume;
-                localStorage.setItem('creoleMusicVolume', volume);
-            });
-            
-            // Événement pour la fin de la musique
-            backgroundMusic.addEventListener('ended', nextTrack);
-            
-            // Gérer les erreurs audio en passant à la piste suivante
-            backgroundMusic.addEventListener('error', function(e) {
-                console.error("Erreur audio sur la piste:", PLAYLIST[currentTrackIndex], e);
-                nextTrack();
-            });
-            
-            // Charger l'état de la musique sauvegardé
-            const savedMusicState = localStorage.getItem('creoleMusicState');
-            if (savedMusicState === 'playing') {
+        const API_URL = 'https://radio-gleaphe.duckdns.org/api/tracks';
+        const BASE_URL = 'https://radio-gleaphe.duckdns.org';
+
+        async function chargerPlaylist() {
+            try {
+                console.log("🎵 Chargement de la playlist depuis l'API...");
+                musicToggle.classList.add('music-loading');
+                musicToggle.textContent = '⏳';
+                musicToggle.title = 'Chargement de la playlist...';
+                trackTitle.textContent = 'Chargement...';
+                
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`📦 ${data.length} pistes reçues`);
+                
+                PLAYLIST = [];
+                PLAYLIST_TITLES = [];
+                
+                for (const track of data) {
+                    let url = track.file || track.path || track.url;
+                    if (!url) continue;
+                    
+                    if (url.startsWith('/')) {
+                        url = BASE_URL + url;
+                    } else if (!url.startsWith('http')) {
+                        url = BASE_URL + '/' + url;
+                    }
+                    
+                    PLAYLIST.push(url);
+                    PLAYLIST_TITLES.push(track.title || 'Sans titre');
+                }
+                
+                if (PLAYLIST.length === 0) {
+                    throw new Error("Aucune piste valide dans la réponse");
+                }
+                
+                console.log(`✅ ${PLAYLIST.length} pistes chargées`);
+                
+                playlistChargee = true;
+                trackInfo.textContent = `1/${PLAYLIST.length}`;
+                musicToggle.classList.remove('music-loading');
                 musicToggle.textContent = '▶️';
                 musicToggle.title = 'Musique prête - Cliquer pour démarrer';
+                
+                currentTrackIndex = 0;
+                updateTrackInfo();
+                loadTrack(currentTrackIndex);
+                
+            } catch (error) {
+                console.error("❌ Erreur chargement playlist:", error);
+                musicToggle.classList.remove('music-loading');
+                musicToggle.textContent = '❌';
+                musicToggle.title = `Erreur : ${error.message} - Cliquer pour réessayer`;
+                trackTitle.textContent = 'Erreur de chargement';
+                
+                musicToggle.onclick = () => {
+                    musicToggle.onclick = toggleMusic;
+                    chargerPlaylist();
+                };
             }
         }
 
-        // Fonction pour charger une piste spécifique
+        function updateTrackInfo() {
+            if (!playlistChargee || PLAYLIST.length === 0) {
+                trackInfo.textContent = '0/0';
+                trackTitle.textContent = '-';
+                return;
+            }
+            
+            trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
+            
+            // Nettoyer le titre pour l'affichage
+            let titre = PLAYLIST_TITLES[currentTrackIndex] || 'Sans titre';
+            // Enlever les suffixes longs et underscores
+            titre = titre
+                .replace(/_-_cd_-_hq.*$/, '')
+                .replace(/_-_cd_.*$/, '')
+                .replace(/_/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            // Tronquer si trop long
+            if (titre.length > 40) {
+                titre = titre.substring(0, 40) + '...';
+            }
+            
+            trackTitle.textContent = titre;
+            trackTitle.title = PLAYLIST_TITLES[currentTrackIndex];
+        }
+
         function loadTrack(index) {
-            console.log(`Chargement de la piste ${index + 1}/${PLAYLIST.length}:`, PLAYLIST[index]);
+            if (!playlistChargee || PLAYLIST.length === 0) {
+                console.warn("Playlist non chargée");
+                return;
+            }
+            
+            console.log(`Chargement piste ${index + 1}/${PLAYLIST.length}: ${PLAYLIST_TITLES[index]}`);
             
             musicToggle.classList.add('music-loading');
             musicToggle.textContent = '⏳';
-            musicToggle.title = 'Chargement de la musique...';
             
             backgroundMusic.src = PLAYLIST[index];
             backgroundMusic.load();
             
             backgroundMusic.addEventListener('canplaythrough', function onCanPlay() {
-                console.log("Piste chargée avec succès");
                 backgroundMusic.removeEventListener('canplaythrough', onCanPlay);
                 musicToggle.textContent = '▶️';
                 musicToggle.title = 'Musique prête - Cliquer pour démarrer';
                 musicToggle.classList.remove('music-loading');
                 updateTrackInfo();
                 
-                // Si la musique était en cours de lecture, la démarrer
                 if (isMusicPlaying) {
                     playMusic();
                 }
             }, { once: true });
         }
 
-        // Fonction pour passer à la piste suivante
         function nextTrack() {
+            if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex + 1) % PLAYLIST.length;
             console.log(`Passage à la piste suivante, index: ${currentTrackIndex}`);
             loadTrack(currentTrackIndex);
         }
 
-        // Fonction pour passer à la piste précédente
         function previousTrack() {
+            if (!playlistChargee || PLAYLIST.length === 0) return;
             currentTrackIndex = (currentTrackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
             console.log(`Passage à la piste précédente, index: ${currentTrackIndex}`);
             loadTrack(currentTrackIndex);
-        }
-
-        // Fonction pour mettre à jour l'affichage de la piste actuelle
-        function updateTrackInfo() {
-            trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
         }
 
         function toggleMusic() {
@@ -1051,8 +1107,7 @@
         }
 
         function playMusic() {
-            // Si aucune source n'est définie, charger la première piste
-            if (!backgroundMusic.src) {
+            if (!backgroundMusic.src && playlistChargee) {
                 loadTrack(currentTrackIndex);
             }
 
@@ -1083,9 +1138,44 @@
             localStorage.setItem('creoleMusicState', 'paused');
         }
 
-        // --- FIN DES CORRECTIONS MUSIQUE ---
+        function setupMusicControls() {
+            const savedVolume = localStorage.getItem('creoleMusicVolume');
+            if (savedVolume) {
+                backgroundMusic.volume = savedVolume;
+                volumeSlider.value = savedVolume;
+            } else {
+                backgroundMusic.volume = volumeSlider.value;
+            }
+            
+            chargerPlaylist();
+            
+            musicToggle.addEventListener('click', toggleMusic);
+            prevBtn.addEventListener('click', previousTrack);
+            nextBtn.addEventListener('click', nextTrack);
+            
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value;
+                backgroundMusic.volume = volume;
+                localStorage.setItem('creoleMusicVolume', volume);
+            });
+            
+            backgroundMusic.addEventListener('ended', nextTrack);
+            
+            backgroundMusic.addEventListener('error', function(e) {
+                console.error("Erreur audio sur la piste:", PLAYLIST[currentTrackIndex]);
+                setTimeout(nextTrack, 1000);
+            });
+            
+            const savedMusicState = localStorage.getItem('creoleMusicState');
+            if (savedMusicState === 'playing') {
+                musicToggle.textContent = '▶️';
+                musicToggle.title = 'Musique prête - Cliquer pour démarrer';
+            }
+        }
 
-        // Initialisation des voix
+        // ============================================================
+        // SYNTHÈSE VOCALE
+        // ============================================================
         function loadVoices() {
             voices = speechSynthesis.getVoices();
             voiceSelect.innerHTML = '<option value="">Choisir une voix</option>';
@@ -1128,7 +1218,9 @@
             }
         }
 
-        // Initialisation
+        // ============================================================
+        // INITIALISATION
+        // ============================================================
         function init() {
             totalWords.textContent = wordsArray.length;
             updateFavoritesCount();
@@ -1143,7 +1235,6 @@
             setupEventListeners();
             setupBackToTop();
             
-            // Déblocage audio après interaction utilisateur
             document.addEventListener('click', function initAudio() {
                 const savedMusicState = localStorage.getItem('creoleMusicState');
                 if (savedMusicState === 'playing' && !isMusicPlaying) {
@@ -1152,7 +1243,6 @@
             }, { once: true });
         }
 
-        // Création de la navigation alphabétique
         function createAlphabetNav() {
             const allBtn = document.createElement('button');
             allBtn.className = 'alphabet-btn active';
@@ -1191,7 +1281,6 @@
             });
         }
 
-        // Filtrage des mots - Recherche uniquement dans les mots créoles
         function filterWords() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             
@@ -1200,7 +1289,6 @@
                 : wordsArray.filter(word => word.firstLetter === currentLetter);
             
             if (searchTerm) {
-                // Recherche uniquement dans les mots créoles
                 filtered = filtered.filter(word => 
                     word.word.toLowerCase().includes(searchTerm)
                 );
@@ -1209,7 +1297,6 @@
             currentWords = filtered;
             renderWords();
             
-            // Mise à jour du compteur de recherche
             if (searchTerm) {
                 searchCount.textContent = `${currentWords.length} mot(s) créole(s) trouvé(s) pour "${searchTerm}"`;
             } else if (currentLetter === 'all') {
@@ -1219,7 +1306,6 @@
             }
         }
 
-        // Affichage des mots
         function renderWords() {
             displayedCount.textContent = currentWords.length;
             
@@ -1236,7 +1322,6 @@
                 message.textContent = 'Aucun mot créole ne correspond à votre recherche.';
                 wordGrid.appendChild(message);
                 
-                // Aussi pour la vue liste
                 const listMessage = message.cloneNode(true);
                 wordList.appendChild(listMessage);
                 return;
@@ -1253,7 +1338,6 @@
             }
         }
 
-        // Affichage en grille
         function renderGridView() {
             currentWords.forEach(word => {
                 const card = createWordCard(word);
@@ -1261,7 +1345,6 @@
             });
         }
 
-        // Affichage en liste
         function renderListView() {
             currentWords.forEach(word => {
                 const listItem = createListItem(word);
@@ -1269,7 +1352,6 @@
             });
         }
 
-        // Création d'une carte de mot
         function createWordCard(word) {
             const card = document.createElement('div');
             card.className = 'word-card';
@@ -1296,7 +1378,6 @@
             return card;
         }
 
-        // Création d'un élément de liste
         function createListItem(word) {
             const item = document.createElement('div');
             item.className = 'list-item';
@@ -1316,7 +1397,6 @@
             return item;
         }
 
-        // Ouverture de la modal
         function openModal(word) {
             currentModalWord = word;
             modalWord.textContent = word.word;
@@ -1329,13 +1409,11 @@
             modal.style.display = 'block';
         }
 
-        // Fermeture de la modal
         function closeModal() {
             modal.style.display = 'none';
             currentModalWord = null;
         }
 
-        // Gestion des favoris
         function toggleFavorite(wordId) {
             if (favorites.includes(wordId)) {
                 favorites = favorites.filter(id => id !== wordId);
@@ -1345,7 +1423,6 @@
             
             localStorage.setItem('creoleFavorites', JSON.stringify(favorites));
             updateFavoritesCount();
-            
             renderWords();
             
             if (currentModalWord && currentModalWord.id === wordId) {
@@ -1355,12 +1432,10 @@
             }
         }
 
-        // Mise à jour du compteur de favoris
         function updateFavoritesCount() {
             favoritesCount.textContent = favorites.length;
         }
 
-        // Synthèse vocale avec voix féminine
         function speakWord(word) {
             if ('speechSynthesis' in window) {
                 speechSynthesis.cancel();
@@ -1391,9 +1466,7 @@
             }
         }
 
-        // Configuration du bouton "Remonter en haut"
         function setupBackToTop() {
-            // Afficher/masquer le bouton selon le défilement
             window.addEventListener('scroll', () => {
                 if (window.pageYOffset > 300) {
                     backToTopBtn.classList.add('show');
@@ -1402,7 +1475,6 @@
                 }
             });
             
-            // Remonter en haut quand on clique sur le bouton
             backToTopBtn.addEventListener('click', () => {
                 window.scrollTo({
                     top: 0,
@@ -1411,7 +1483,6 @@
             });
         }
 
-        // Configuration des écouteurs d'événements
         function setupEventListeners() {
             searchInput.addEventListener('input', filterWords);
             
@@ -1464,7 +1535,6 @@
             });
         }
 
-        // Initialiser l'application
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
