@@ -74,7 +74,6 @@
             flex-shrink: 0;
         }
 
-        /* Bandeau défilant au milieu */
         .track-banner {
             flex: 1;
             display: flex;
@@ -117,10 +116,10 @@
             white-space: nowrap;
             display: inline-block;
             opacity: 0.9;
-            transform: translateX(0);
             position: absolute;
             left: 0;
             top: 0;
+            transform: translateX(0);
         }
 
         .track-title.defile {
@@ -133,10 +132,10 @@
 
         @keyframes defilement-banner {
             0% {
-                transform: translateX(0);
+                transform: translateX(100%);
             }
             100% {
-                transform: translateX(-100%);
+                transform: translateX(calc(-1 * var(--largeur-titre, 100%)));
             }
         }
 
@@ -512,9 +511,6 @@
             max-width: 60%;
         }
 
-        /* ============================================================ */
-        /* MODAL                                                       */
-        /* ============================================================ */
         .modal {
             display: none;
             position: fixed;
@@ -630,9 +626,6 @@
             font-size: 0.8rem;
         }
 
-        /* ============================================================ */
-        /* BOUTON RETOUR EN HAUT                                       */
-        /* ============================================================ */
         .back-to-top {
             position: fixed;
             bottom: 20px;
@@ -662,9 +655,6 @@
             display: flex;
         }
 
-        /* ============================================================ */
-        /* ANIMATIONS                                                  */
-        /* ============================================================ */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -681,9 +671,6 @@
             100% { filter: drop-shadow(0 0 5px var(--reunion-red)); }
         }
 
-        /* ============================================================ */
-        /* RESPONSIVE                                                  */
-        /* ============================================================ */
         @media (max-width: 1024px) {
             .app-container {
                 flex-direction: column;
@@ -1048,7 +1035,7 @@
         let isMusicPlaying = false;
 
         // ============================================================
-        // PLAYLIST LOCALE (chargée depuis playlist.js)
+        // PLAYLIST LOCALE
         // ============================================================
         let PLAYLIST = [];
         let PLAYLIST_TITLES = [];
@@ -1105,7 +1092,6 @@
                 updateTrackInfo();
                 loadTrack(currentTrackIndex);
                 
-                // Recalculer le défilement au redimensionnement de la fenêtre
                 window.addEventListener('resize', () => {
                     setTimeout(updateTrackInfo, 100);
                 });
@@ -1130,7 +1116,6 @@
             trackInfo.textContent = `${currentTrackIndex + 1}/${PLAYLIST.length}`;
             
             let titre = PLAYLIST_TITLES[currentTrackIndex] || 'Sans titre';
-            // Nettoyer les suffixes et underscores
             titre = titre
                 .replace(/_-_cd_-_hq.*$/, '')
                 .replace(/_-_cd_.*$/, '')
@@ -1143,7 +1128,6 @@
             trackTitle.classList.remove('defile');
             trackTitle.style.transform = 'translateX(0)';
             
-            // Détection automatique du dépassement
             setTimeout(() => {
                 const masque = document.querySelector('.track-title-mask');
                 if (!masque) return;
@@ -1151,14 +1135,14 @@
                 const largeurTitre = trackTitle.scrollWidth;
                 const largeurMasque = masque.clientWidth;
                 
-                console.log(`📏 Titre: "${titre}" | Largeur texte: ${largeurTitre}px | Masque: ${largeurMasque}px`);
+                console.log(`📏 Titre: "${titre}" | Texte: ${largeurTitre}px | Masque: ${largeurMasque}px`);
                 
                 if (largeurTitre > largeurMasque) {
-                    // Durée proportionnelle à la longueur (plus long = plus lent)
-                    const duree = Math.max(12, Math.min(40, largeurTitre / 20));
+                    const duree = Math.max(8, largeurTitre / 40);
+                    trackTitle.style.setProperty('--largeur-titre', largeurTitre + 'px');
                     trackTitle.style.animationDuration = duree + 's';
                     trackTitle.classList.add('defile');
-                    console.log(`✅ Défilement ACTIVÉ (${duree.toFixed(1)}s)`);
+                    console.log(`✅ Défilement ACTIVÉ (${duree.toFixed(1)}s, ${largeurTitre}px)`);
                 } else {
                     console.log('⏸️ Titre court, pas de défilement');
                 }
