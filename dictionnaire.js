@@ -1,7 +1,4 @@
 var dictionnaire = {
-  "Créole réunionnais": "Français",
-  "Author name": "Julien Talabaza",
-  "Font": "Arial\\12\\Arial\\12",
   "a fié": "de confiance | De confiance",
   "a gos": "à gauche",
   "a koze": "pourquoi (?)",
@@ -11374,8 +11371,5 @@ var dictionnaire = {
   "émé 2-lémé": "Aimer 2-personne aimé",
   "épila": "Et ensuite 1-Puis",
   "éspéré": "Espérer , attendre"
-};
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = dictionnaire;
 }
+
